@@ -1,4 +1,4 @@
-# Rick and Morty Flask App
+# Rick and Morty App
 
 This application serves as a simple backend to interact with the Rick and Morty API, providing information about characters.
 
