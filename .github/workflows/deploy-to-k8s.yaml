@@ -37,17 +37,6 @@ jobs:
         - role: worker" > kind-config.yaml
         kind create cluster --name kind --config kind-config.yaml
 
-    - name: Install Ingress Controller
-      run: |
-        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-      # Wait for the Ingress controller to be fully up and running
-    - name: Wait for Ingress Controller
-      run: |
-        kubectl wait --namespace ingress-nginx \
-          --for=condition=ready pod \
-          --selector=app.kubernetes.io/component=controller \
-          --timeout=90s
-
     - name: Load Docker image to kind
       run: |
         kind load docker-image rickandmorty-app:latest --name kind
@@ -56,7 +45,6 @@ jobs:
       run: |
         kubectl apply -f yamls/Deployment.yaml
         kubectl apply -f yamls/Service.yaml
-        kubectl apply -f yamls/Ingress.yaml
         
     - name: Describe pods
       run: kubectl describe pods
@@ -74,8 +62,13 @@ jobs:
       run: |
         kubectl rollout status deployment/rickandmorty-app
 
+    - name: Port-forward Service
+      run: |
+        kubectl port-forward service/rickandmorty-app 8080:80 &
+        sleep 10  # Wait a bit for port-forward to establish
+  
     - name: Test Application Endpoints
       run: |
-        kubectl run curl --image=radial/busyboxplus:curl -i --tty --rm --restart=Never -- curl http://rickandmorty-app
-        kubectl run curl --image=radial/busyboxplus:curl -i --tty --rm --restart=Never -- curl http://rickandmorty-app/api/characters
-        kubectl run curl --image=radial/busyboxplus:curl -i --tty --rm --restart=Never -- curl http://rickandmorty-app/healthcheck
+        curl -i localhost:8080
+        curl -i localhost:8080/api/characters
+        curl -i localhost:8080/healthcheck
