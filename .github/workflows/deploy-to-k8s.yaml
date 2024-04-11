@@ -36,14 +36,14 @@ jobs:
       run: |
         kind load docker-image rickandmorty-app:latest --name kind
 
+    - name: Print working directory
+      run: pwd
+
     - name: Apply Kubernetes manifests
       run: |
         kubectl apply -f k8s/Deployment.yaml
         kubectl apply -f k8s/Service.yaml
         kubectl apply -f k8s/Ingress.yaml
-
-    - name: Print working directory
-      run: pwd
 
     - name: Check deployment rollout status
       run: |
