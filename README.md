@@ -56,7 +56,7 @@ Once you have the Ingress IP or hostname, you can access the API endpoints. For 
 
 1. Package the Helm chart
 ```
-cd helm
+cd helm/rickandmorty
 helm package rickandmorty
 ```
 
