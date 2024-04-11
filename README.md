@@ -41,6 +41,8 @@ To deploy the application to a Kubernetes cluster, follow these steps:
 
 1. Apply the Kubernetes manifests:
 ```
+cd yamls
+
 kubectl apply -f Deployment.yaml
 kubectl apply -f Service.yaml
 kubectl apply -f Ingress.yaml
