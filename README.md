@@ -73,3 +73,36 @@ helm install rickandmorty-release rickandmorty-0.1.0.tgz
 
 - `GET /healthcheck`  
   Returns the status of the application, useful for health monitoring.
+
+
+## GitHub Actions Workflow for Rick and Morty App
+
+The project includes a GitHub Actions workflow defined in `.github/workflows/deploy-to-k8s.yaml`. This workflow automates the process of building the Docker image, setting up a Kubernetes cluster using Kind, deploying the Rick and Morty application to this cluster, and testing its endpoints.
+
+### Workflow Details
+
+#### Jobs and Steps
+
+1. **Checkout Code**
+   - The workflow starts by checking out the code of the repository, making it available for subsequent steps.
+2. **Set Up Docker Buildx**
+   - Prepares the Docker Buildx environment, which enhances the building of Docker images with additional features.
+3. **Build Docker Image**
+   - Builds the Docker image for the Rick and Morty Flask application using the Dockerfile in the repository.
+4. **Setup Kind**
+   - Initializes a Kind cluster within the GitHub Actions runner. Kind creates a Kubernetes cluster by running containers as nodes.
+5. **Load Docker Image to Kind**
+   - Transfers the built Docker image into the Kind cluster, allowing it to be used for deployment.
+6. **Apply Kubernetes Manifests**
+   - Deploys the application to the Kind cluster by applying the Kubernetes manifests found in the `k8s/` directory of the repository.
+7. **Check Deployment Rollout Status**
+   - Ensures the deployment process completes successfully by monitoring the rollout status of the Kubernetes deployment.
+
+8. **Test Application Endpoints**
+   - Verifies the application's functionality by testing its endpoints. This step uses `curl` commands to make HTTP requests to the application's service within the Kind cluster.
+
+### What Each Step Achieves
+
+- **Build and Test Phases**: The initial steps focus on building the Docker image and setting up the Kubernetes environment, essential for running the application in a containerized manner.
+- **Deployment Phase**: The application is deployed to the Kubernetes cluster, mimicking a production-like environment for testing.
+- **Validation Phase**: The final step tests the application's endpoints, ensuring that the deployment was successful and the application behaves as expected in the Kubernetes environment.
