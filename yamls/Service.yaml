@@ -3,9 +3,9 @@ kind: Service
 metadata:
   name: rickandmorty-app
 spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 5000
   selector:
     app: rickandmorty-app
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 5000
