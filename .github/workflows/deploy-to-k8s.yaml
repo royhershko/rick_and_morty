@@ -21,9 +21,9 @@ jobs:
     - name: Build Docker image
       run: |
         docker build . -t rickandmorty-app:latest
-
+        
     - name: Setup kind
-      uses: engineerd/setup-kind@latest
+      uses: helm/kind-action@v1.2.0
 
     - name: Load Docker image to kind
       run: |
