@@ -35,7 +35,7 @@ docker run -p 5000:5000 rickandmorty-flask-app
 This will start the application inside a Docker container and make it accessible on `http://localhost:5000`.
 ```
 
-## Deploying to Kubernetes
+## Deploying to Kubernetes using kubectl
 
 To deploy the application to a Kubernetes cluster, follow these steps:
 
@@ -49,6 +49,19 @@ kubectl apply -f Ingress.yaml
 2. Access the application:
 The application's endpoints will be accessible through the Ingress's IP or hostname. Use the following command to get the Ingress details and find the IP or hostname: `kubectl get ingress`
 Once you have the Ingress IP or hostname, you can access the API endpoints. For example, if the Ingress IP is `192.168.99.100`, you can access the `/api/characters` endpoint at `http://192.168.99.100/rickandmorty/api/characters`.
+
+## Deploying to Kubernetes using Helm
+
+1. Package the Helm chart
+```
+cd helm
+helm package rickandmorty
+```
+
+2. Install the packaged chart into your Kubernetes cluster:
+```
+helm install rickandmorty-release rickandmorty-0.1.0.tgz
+```
 
 ## REST API Endpoints
 
