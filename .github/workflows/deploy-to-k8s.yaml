@@ -1,0 +1,53 @@
+name: CI with Kubernetes
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build Docker image
+      run: |
+        docker build . -t rickandmorty-app:latest
+
+    - name: Setup kind
+      uses: engineerd/setup-kind@v2.0.0
+      with:
+        config: |
+          kind: Cluster
+          apiVersion: kind.x-k8s.io/v1alpha4
+          nodes:
+          - role: control-plane
+          - role: worker
+
+    - name: Load Docker image to kind
+      run: |
+        kind load docker-image rickandmorty-app:latest
+
+    - name: Apply Kubernetes manifests
+      run: |
+        kubectl apply -f k8s/Deployment.yaml
+        kubectl apply -f k8s/Service.yaml
+        kubectl apply -f k8s/Ingress.yaml
+
+    - name: Check deployment rollout status
+      run: |
+        kubectl rollout status deployment/rickandmorty-app
+
+    - name: Test Application Endpoints
+      run: |
+        kubectl run curl --image=radial/busyboxplus:curl -i --tty --rm --restart=Never -- curl http://rickandmorty-app
+        kubectl run curl --image=radial/busyboxplus:curl -i --tty --rm --restart=Never -- curl http://rickandmorty-app/api/characters
+        kubectl run curl --image=radial/busyboxplus:curl -i --tty --rm --restart=Never -- curl http://rickandmorty-app/healthcheck
