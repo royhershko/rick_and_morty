@@ -36,22 +36,21 @@ jobs:
       run: |
         kind load docker-image rickandmorty-app:latest --name kind
 
-
-
     - name: Apply Kubernetes manifests
       run: |
         kubectl apply -f yamls/Deployment.yaml
         kubectl apply -f yamls/Service.yaml
         kubectl apply -f yamls/Ingress.yaml
+        
+    - name: Describe pods
+      run: kubectl describe pods
+    
+    - name: Get events
+      run: kubectl get events
 
-    - name: Get
+    - name: Check deployment rollout status
       run: |
-        kubectl get po -A
-        kubectl get deploy -A
-
-    #- name: Check deployment rollout status
-    #  run: |
-    #    kubectl rollout status deployment/rickandmorty-app
+        kubectl rollout status deployment/rickandmorty-app
 
     - name: Test Application Endpoints
       run: |
