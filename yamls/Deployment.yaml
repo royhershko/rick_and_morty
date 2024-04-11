@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: rickandmorty-app
-        image: rickandmorty-flask-app:latest
+        image: rickandmorty-app:latest
         ports:
         - containerPort: 5000
