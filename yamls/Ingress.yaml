@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rickandmorty-app
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /rickandmorty
+        pathType: Prefix
+        backend:
+          service:
+            name: rickandmorty-app
+            port:
+              number: 80
