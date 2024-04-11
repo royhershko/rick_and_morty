@@ -23,14 +23,7 @@ jobs:
         docker build . -t rickandmorty-app:latest
 
     - name: Setup kind
-      uses: engineerd/setup-kind@v2.0.0
-      with:
-        config: |
-          kind: Cluster
-          apiVersion: kind.x-k8s.io/v1alpha4
-          nodes:
-          - role: control-plane
-          - role: worker
+      uses: engineerd/setup-kind@latest
 
     - name: Load Docker image to kind
       run: |
