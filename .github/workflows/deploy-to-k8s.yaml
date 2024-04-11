@@ -22,14 +22,15 @@ jobs:
       run: |
         docker build . -t rickandmorty-app:latest
         
-    - name: Setup kind
-      uses: helm/kind-action@v1.2.0
-      with:
-        version: v0.11.1
-        config: |
-          kind: Cluster
-          apiVersion: kind.x-k8s.io/v1alpha4
-          name: kind
+    - name: Install kind
+      run: |
+        curl -Lo ./kind "https://kind.sigs.k8s.io/dl/v0.11.1/kind-$(uname)-amd64"
+        chmod +x ./kind
+        mv ./kind /usr/local/bin/kind
+    
+    - name: Create kind cluster
+      run: |
+        kind create cluster --name kind
 
     - name: Load Docker image to kind
       run: |
